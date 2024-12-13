@@ -1,0 +1,38 @@
+[
+  {
+    "id_category": 101,
+    "name": "Nabiał",
+    "main_category": "Produkty mleczne",
+    "description": "Produkty mleczne i nabiałowe."
+  },
+  {
+    "id_category": 104,
+    "name": "Mięso",
+    "main_category": "Produkty mięsne",
+    "description": "Produkty bogate w składniki odżywcze."
+  },
+  {
+    "id_category": 105,
+    "name": "Napoje",
+    "main_category": "Napój",
+    "description": "Produkty bogate w składniki odżywcze."
+  },
+  {
+    "id_category": 103,
+    "name": "Warzywa",
+    "main_category": "Produkty spożywcze",
+    "description": "Produkty bogate w składniki odżywcze."
+  },
+  {
+    "id_category": 102,
+    "name": "Owoce",
+    "main_category": "Produkty spożywcze",
+    "description": "Produkty bogate w składniki odżywcze."
+  },
+  {
+    "id_category": 6,
+    "name": "Alkohole",
+    "main_category": "PRodukty spożywcze",
+    "description": "PRzeznacozne dla osob pełnoletnich"
+  }
+]

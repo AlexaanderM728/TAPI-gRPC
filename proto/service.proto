@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package services;
+
+import "google/protobuf/empty.proto";
+
+// Kategorie
+message Category {
+  int32 id_category = 1;
+  string name = 2;
+  string main_category = 3;
+  string description = 4;
+}
+
+message CategoryRequest {
+  int32 id_category = 1;
+}
+
+message ListCategoriesRequest {
+  string name_contains = 1;
+}
+
+message CategoriesResponse {
+  repeated Category categories = 1;
+}
+
+// Produkty
+message Product {
+  int32 id = 1;
+  string name = 2;
+  int32 category_id = 3;
+  NutritionalValues nutritional_values = 4;
+}
+
+message NutritionalValues {
+  float carbohydrates = 1;
+  float proteins = 2;
+  float fats = 3;
+}
+
+message ProductRequest {
+  int32 id = 1;
+}
+
+message ListProductsRequest {
+  float min_carbohydrates = 1;
+  float max_carbohydrates = 2;
+  int32 category_id = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ProductsResponse {
+  repeated Product products = 1;
+}
+
+// Dostawcy
+message Supplier {
+  int32 id_supplier = 1;
+  string name = 2;
+  float rating = 3;
+}
+
+message SupplierRequest {
+  int32 id_supplier = 1;
+}
+
+message ListSuppliersRequest {
+  float min_rating = 1;
+  float max_rating = 2;
+  string sort_by = 3;
+  string sort_order = 4;
+}
+
+message SuppliersResponse {
+  repeated Supplier suppliers = 1;
+}
+
+// Serwisy
+service CategoryService {
+  rpc ListCategories(ListCategoriesRequest) returns (CategoriesResponse);
+  rpc GetCategoryById(CategoryRequest) returns (Category);
+}
+
+service ProductService {
+  rpc ListProducts(ListProductsRequest) returns (ProductsResponse);
+  rpc GetProductById(ProductRequest) returns (Product);
+}
+
+service SupplierService {
+  rpc ListSuppliers(ListSuppliersRequest) returns (SuppliersResponse);
+  rpc GetSupplierById(SupplierRequest) returns (Supplier);
+}
