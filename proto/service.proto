@@ -29,7 +29,16 @@ message Product {
   int32 id = 1;
   string name = 2;
   int32 category_id = 3;
-  NutritionalValues nutritional_values = 4;
+  int32 id_supplier = 4;
+  NutritionalValues nutritional_values = 5;
+}
+
+message FullProduct {
+  int32 id = 1;
+  string name = 2;
+  Category category_id = 3;
+  Supplier id_supplier = 4;
+  NutritionalValues nutritional_values = 5;
 }
 
 message NutritionalValues {
@@ -43,11 +52,24 @@ message ProductRequest {
 }
 
 message ListProductsRequest {
-  float min_carbohydrates = 1;
-  float max_carbohydrates = 2;
-  int32 category_id = 3;
-  int32 limit = 4;
-  int32 offset = 5;
+  string name_contains = 1;
+  int32 category_id = 2; 
+  float min_carbohydrates = 3;
+  float max_carbohydrates = 4; 
+  float min_proteins = 5;
+  float max_proteins = 6;
+  float min_fats = 7;
+  float max_fats = 8;
+  int32 limit = 9;
+  int32 offset = 10;
+
+}
+
+message AddProductRequest {
+  string name = 1;
+  int32 category_id = 2;
+  int32 supplier_id = 3;
+  NutritionalValues nutritional_values = 4;
 }
 
 message ProductsResponse {
@@ -58,7 +80,12 @@ message ProductsResponse {
 message Supplier {
   int32 id_supplier = 1;
   string name = 2;
-  float rating = 3;
+  ContactInfo contact_info = 3;
+  float rating = 4;
+}
+message ContactInfo{
+  string address = 1;
+  string phone = 2;
 }
 
 message SupplierRequest {
@@ -84,7 +111,9 @@ service CategoryService {
 
 service ProductService {
   rpc ListProducts(ListProductsRequest) returns (ProductsResponse);
+  rpc getFullProductById(ProductRequest) returns (FullProduct);
   rpc GetProductById(ProductRequest) returns (Product);
+  rpc AddProduct(AddProductRequest) returns (Product);
 }
 
 service SupplierService {
