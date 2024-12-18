@@ -1120,5 +1120,16 @@
       "proteins": 2,
       "fats": 3
     }
+  },
+  {
+    "id": 103,
+    "name": "dziala",
+    "category_id": 101,
+    "id_supplier": 80,
+    "nutritional_values": {
+      "carbohydrates": 5,
+      "proteins": 5,
+      "fats": 10
+    }
   }
 ]

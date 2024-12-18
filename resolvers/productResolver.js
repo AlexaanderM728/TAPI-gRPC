@@ -4,6 +4,7 @@ const suppliers = require("../data/suppliers.json");
 const grpc = require("@grpc/grpc-js");
 const fs = require("fs");
 const path = require("path");
+const { request } = require("http");
 
 // Lista produktów z filtrowaniem i paginacją
 function listProducts(call, callback) {
@@ -20,6 +21,8 @@ function listProducts(call, callback) {
     max_fats,
     limit,
     offset,
+    sort_by,
+    sort_order,
   } = call.request;
 
   // Filtrowanie po nazwie (ignorujemy puste stringi)
@@ -53,14 +56,17 @@ function listProducts(call, callback) {
   // Filtrowanie po białkach
   if (min_proteins && min_proteins > 0) {
     filteredProducts = filteredProducts.filter(
-      (p) => roundToTwo(p.nutritional_values.proteins) >= parseFloat(min_proteins.toFixed(2))
+      (p) =>
+        roundToTwo(p.nutritional_values.proteins) >=
+        parseFloat(min_proteins.toFixed(2))
     );
   }
   if (max_proteins && max_proteins > 0) {
     filteredProducts = filteredProducts.filter(
-      (p) => roundToTwo(p.nutritional_values.proteins) <= parseFloat(max_proteins.toFixed(2))
+      (p) =>
+        roundToTwo(p.nutritional_values.proteins) <=
+        parseFloat(max_proteins.toFixed(2))
     );
-    
   }
 
   // Filtrowanie po tłuszczach
@@ -75,16 +81,34 @@ function listProducts(call, callback) {
     );
   }
 
+  // Sortowanie
+  if (sort_by) {
+    filteredProducts.sort((a, b) => {
+      let aValue = a[sort_by];
+      let bValue = b[sort_by];
+
+      // Obsługa sortowania po zagnieżdżonych polach (np. nutritional_values.carbohydrates)
+      if (sort_by.includes(".")) {
+        const keys = sort_by.split(".");
+        aValue = keys.reduce((acc, key) => acc && acc[key], a);
+        bValue = keys.reduce((acc, key) => acc && acc[key], b);
+      }
+
+      if (aValue === undefined || bValue === undefined) return 0;
+      return sort_order === "desc"
+        ? bValue - aValue
+        : aValue - bValue;
+    });
+  }
+
   // Paginacja
   const startIndex = offset || 0;
   const endIndex = startIndex + (limit || filteredProducts.length);
 
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
-
   callback(null, { products: paginatedProducts });
 }
-
 
 function roundToTwo(num) {
   return parseFloat(num.toFixed(2)); // Zaokrąglenie do dwóch miejsc po przecinku
@@ -225,11 +249,94 @@ function addProduct(call, callback) {
   callback(null, newProduct);
 }
 
+function deletedProduct(call, callback){
+  const { id } = call.request;
 
+  const productIndex = products.findIndex((p) => p.id === id);
+
+  if(productIndex === -1){
+    return callback({
+      code:404,
+      message: `Product z ID ${id} nie istnieje`,
+    });
+  }
+
+  const deletedProduct = products.splice(productIndex, 1)[0];
+
+  fs.writeFileSync(
+    path.resolve(__dirname, '../data/products.json'),
+    JSON.stringify(products, null, 2)
+  );
+
+  callback(null, deletedProduct);
+}
+
+function UpdateProduct(call, callback) {
+  console.log("Dane wejściowe do funkcji updateProduct:", call.request);
+
+  if(call.request.nutritional_values.carbohydrates){
+    console.log("carbohydrates");
+  }
+  if(call.request.nutritional_values.proteins){
+    console.log("proteins");
+  }
+  if(call.request.nutritional_values.fats){
+    console.log("fats");
+  }
+  // Znajdź produkt po ID
+  const productIndex = products.findIndex((p) => p.id === call.request.id);
+  if (productIndex === -1) {
+    return callback({
+      code: grpc.status.NOT_FOUND,
+      message: `Produkt z ID ${id} nie istnieje.`,
+    });
+  }
+
+  // Pobierz istniejący produkt
+  const existingProduct = products[productIndex];
+
+  // Zaktualizuj dane produktu tylko, jeśli są dostarczone w żądaniu
+  const updatedProduct = {
+    id: existingProduct.id, // ID nie zmieniamy
+    name: call.request.name || existingProduct.name, // Jeśli podano, zmieniamy nazwę
+    category_id: call.request.category_id || existingProduct.category_id, // Jeśli podano, zmieniamy kategorię
+    id_supplier: call.request.id_supplier || existingProduct.id_supplier, // Jeśli podano, zmieniamy dostawcę
+    nutritional_values: {
+      carbohydrates: call.request.nutritional_values.carbohydrates ?? existingProduct.nutritional_values.carbohydrates,
+      proteins: call.request.nutritional_values.proteins ?? existingProduct.nutritional_values.proteins,
+      fats: call.request.nutritional_values.fats ?? existingProduct.nutritional_values.fats,
+    },
+  };
+
+  // Wyświetl dane przed zapisaniem do pliku
+  console.log("Zaktualizowane dane produktu:", updatedProduct);
+
+  // Zaktualizuj produkt w liście produktów
+  products[productIndex] = updatedProduct;
+
+  // Zapisz zmieniony plik JSON
+  try {
+    fs.writeFileSync(
+      path.resolve(__dirname, "../data/products.json"),
+      JSON.stringify(products, null, 2)
+    );
+    console.log("Dane zapisane do pliku JSON.");
+  } catch (error) {
+    return callback({
+      code: grpc.status.INTERNAL,
+      message: "Nie udało się zapisać zmian w pliku.",
+    });
+  }
+
+  // Zwróć zaktualizowany produkt
+  callback(null, updatedProduct);
+}
 
 module.exports = {
   listProducts,
   getFullProductById,
   GetProductById,
-  addProduct
+  addProduct,
+  deletedProduct,
+  UpdateProduct
 };

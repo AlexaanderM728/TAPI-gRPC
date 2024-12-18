@@ -116,7 +116,39 @@ function fetchAddPrduct(newProduct){
     if (error) {
       console.error("Błąd podczas dodawania produktu:", error.message);
     } else {
-      console.log("Nowy produkt został dodany:", response);
+      const formattedResponse = {
+        id: response.id, 
+        name: response.name,
+        category_id: response.category_id,
+        id_supplier: response.id_supplier,
+        nutritional_values: {
+          carbohydrates: roundToTwo(response.nutritional_values.carbohydrates),
+          proteins: roundToTwo(response.nutritional_values.proteins),
+          fats: roundToTwo(response.nutritional_values.fats),
+        },
+      };
+
+      console.log("Nowy produkt został dodany:", JSON.stringify(formattedResponse, null,2));
+    }
+  });
+}
+
+function fetchDeleteProduct(deleteProduct){
+  clientProd.deletedProduct({id:deleteProduct}, (error, response)=>{
+    if (error) {
+      console.error("Błąd podczas usuwania produktu:", error.message);
+    } else {
+      console.log("produkt został usuniety:", response);
+    }
+  });
+}
+
+function fetchUpdateProduct(id, updates) {
+  clientProd.UpdateProduct({ id, ...updates }, (error, response) => {
+    if (error) {
+      console.error("Błąd podczas aktualizacji produktu:", error.message);
+    } else {
+      console.log("Produkt zaktualizowany:", response);
     }
   });
 }
@@ -127,7 +159,9 @@ const filters = {
   max_carbohydrates: 5,
   max_proteins: 2,
   min_proteins: 1,  
-  limit: 10,         
+  limit: 20,  
+  sort_by: "nutritional_values.carbohydrates" ,
+  sort_order: "desc"
          
 };
 fetchListProduct(filters);
@@ -145,6 +179,22 @@ const newProduct = {
 };
 
 //fetchAddPrduct(newProduct);
+
+
+//fetchDeleteProduct(104);
+
+/*
+fetchUpdateProduct(103,{
+  name: "dziala",
+  category_id: 101,
+  id_supplier: 80, 
+  nutritional_values:{
+    fats: 10,
+    carbohydrates: 5,
+    proteins: 5
+  }
+})
+*/
 
 //fetchGetProductById(100);
 //fetchGetProductById(103);

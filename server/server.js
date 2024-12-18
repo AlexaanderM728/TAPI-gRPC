@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 
 
-const { listProducts, getFullProductById, GetProductById, addProduct } = require("../resolvers/productResolver");
+const { listProducts, getFullProductById, GetProductById, addProduct, deletedProduct, UpdateProduct } = require("../resolvers/productResolver");
 const { listSuppliers, getSupplierById } = require("../resolvers/supplierResolver");
 const { listCategories, getCategoryById } = require("../resolvers/categoryResolver");
 
@@ -50,7 +50,9 @@ function main() {
     listProducts,
     getFullProductById,
     GetProductById,
-    addProduct
+    addProduct,
+    deletedProduct,
+    UpdateProduct,
   })
 
   server.addService(services.SupplierService.service, {
