@@ -34,5 +34,11 @@
     "name": "Alkohole",
     "main_category": "PRodukty spożywcze",
     "description": "PRzeznacozne dla osob pełnoletnich"
+  },
+  {
+    "id_category": 7,
+    "name": " NOWA NOWA KATEGORIA",
+    "main_category": "NOWA glowan kategoria",
+    "description": " opis kateogrii"
   }
 ]

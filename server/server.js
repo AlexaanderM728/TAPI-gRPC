@@ -5,8 +5,8 @@ const fs = require("fs");
 
 
 const { listProducts, getFullProductById, GetProductById, addProduct, deletedProduct, UpdateProduct } = require("../resolvers/productResolver");
-const { listSuppliers, getSupplierById } = require("../resolvers/supplierResolver");
-const { listCategories, getCategoryById } = require("../resolvers/categoryResolver");
+const { listSuppliers, getSupplierById, addSupplier, deletedSupplier, updateSupplier } = require("../resolvers/supplierResolver");
+const { listCategories, getCategoryById, addCategory, deletedCategory, UpdateCategory } = require("../resolvers/categoryResolver");
 
 const PROTO_PATH = path.join(__dirname, "../proto/service.proto");
 
@@ -43,7 +43,10 @@ function main() {
   const server = new grpc.Server();
   server.addService(services.CategoryService.service, {
     listCategories,
-    getCategoryById
+    getCategoryById,
+    addCategory,
+    deletedCategory,
+    UpdateCategory,
   });
 
   server.addService(services.ProductService.service,{
@@ -57,7 +60,10 @@ function main() {
 
   server.addService(services.SupplierService.service, {
     listSuppliers,
-    getSupplierById
+    getSupplierById,
+    addSupplier,
+    deletedSupplier,
+    updateSupplier
   })
 
   server.bindAsync("0.0.0.0:50051", grpc.ServerCredentials.createInsecure(), () => {

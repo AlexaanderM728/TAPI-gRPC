@@ -24,6 +24,37 @@ message CategoriesResponse {
   repeated Category categories = 1;
 }
 
+message AddCategoryRequest {
+  string name = 1;
+  string main_category = 2;
+  string description = 3;
+}
+
+message DeleteCategorRequest{
+  int32 id_category = 1;
+}
+
+message DeleteCategoryResponse {
+  int32 id_category = 1;
+  string name = 2;
+  string main_category = 3;
+  string description = 4;
+}
+
+message UpdateCategoryRequest {
+  int32 id_category = 1;
+  string name = 2;
+  string main_category = 3;
+  string description = 4;
+}
+
+message UpdateCategoryResponse {
+  int32 id_category = 1;
+  string name = 2;
+  string main_category = 3;
+  string description = 4;
+}
+
 // Produkty
 message Product {
   int32 id = 1;
@@ -133,10 +164,44 @@ message SuppliersResponse {
   repeated Supplier suppliers = 1;
 }
 
+message AddSupplierRequest {
+  string name = 1;
+  ContactInfo contact_info = 2;
+  float rating = 3;
+}
+
+message DeleteSupplierRequest{
+  int32 id_supplier = 1;
+}
+
+message DeleteSupplierResponse {
+  int32 id_supplier = 1;
+  string name = 2;
+  ContactInfo contact_info = 3;
+  float rating = 4;
+}
+
+message UpdateSupplierRequest {
+  int32 id_supplier = 1;
+  string name = 2;
+  ContactInfo contact_info = 3;
+  float rating = 4;
+}
+
+message UpdateSupplierResponse {
+  int32 id_supplier = 1;
+  string name = 2;
+  ContactInfo contact_info = 3;
+  float rating = 4;
+}
+
 // Serwisy
 service CategoryService {
   rpc ListCategories(ListCategoriesRequest) returns (CategoriesResponse);
   rpc GetCategoryById(CategoryRequest) returns (Category);
+  rpc addCategory(AddCategoryRequest) returns (Category);
+  rpc deletedCategory(DeleteCategorRequest) returns (DeleteCategoryResponse);
+  rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse);
 }
 
 service ProductService {
@@ -151,4 +216,7 @@ service ProductService {
 service SupplierService {
   rpc ListSuppliers(ListSuppliersRequest) returns (SuppliersResponse);
   rpc GetSupplierById(SupplierRequest) returns (Supplier);
+  rpc addSupplier(AddSupplierRequest) returns (Supplier);
+  rpc deletedSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+  rpc updateSupplier(UpdateSupplierRequest) returns (UpdateSupplierResponse);
 }

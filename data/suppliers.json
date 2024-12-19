@@ -925,5 +925,14 @@
       "phone": "123456789"
     },
     "rating": 6.9
+  },
+  {
+    "id_supplier": 104,
+    "name": " zaktualiozwnay dostawca",
+    "contact_info": {
+      "address": " jeszcze nowszy adres",
+      "phone": "12345670"
+    },
+    "rating": 3.7
   }
 ]

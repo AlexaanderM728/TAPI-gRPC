@@ -241,7 +241,7 @@ function addProduct(call, callback) {
 
   // Zapis do pliku JSON
   fs.writeFileSync(
-    path.resolve(__dirname, "../data/products.json"), // Poprawiona ścieżka
+    path.resolve(__dirname, "../data/products.json"), 
     JSON.stringify(products, null, 2)
   );
 
@@ -274,15 +274,6 @@ function deletedProduct(call, callback){
 function UpdateProduct(call, callback) {
   console.log("Dane wejściowe do funkcji updateProduct:", call.request);
 
-  if(call.request.nutritional_values.carbohydrates){
-    console.log("carbohydrates");
-  }
-  if(call.request.nutritional_values.proteins){
-    console.log("proteins");
-  }
-  if(call.request.nutritional_values.fats){
-    console.log("fats");
-  }
   // Znajdź produkt po ID
   const productIndex = products.findIndex((p) => p.id === call.request.id);
   if (productIndex === -1) {
