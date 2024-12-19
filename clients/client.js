@@ -344,11 +344,3 @@ fetchUpdateSupplier(104, {
 // do fetchListSuppliers : { min_rating: 2, max_rating: 4 } lub  min_rating: 2, max_rating: 4 , sort_by: "rating", sort_order: "asc"} , pusta zwraca cala baze
 fetchListSuppliers({ min_rating: 2, max_rating: 4 , sort_by: "rating", sort_order: "asc"});
 
-// Przykład wywołania ListCategories
-/*client.ListCategories({}, (error, response) => {
-  if (error) {
-    console.error("Błąd serwera:", error.message);
-  } else {
-    console.log("Kategorie:", response.categories);
-  }
-});*/

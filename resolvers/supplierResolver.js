@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 // Lista dostawców z filtrowaniem i sortowaniem
 const listSuppliers =(call, callback) => {
-  console.log("Dane wejściowe do funkcji listSuppliers:", call.request);
 
   let filteredSuppliers = suppliers; // Startuj z pełną listą
 
